@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-*/
+coverage/
+desktop-test-output/
+.env
+.env.*
+!.env.example
+*.log
+*.lnk
+*.lnk.*
+.DS_Store
+Thumbs.db
+desktop-test-output.png

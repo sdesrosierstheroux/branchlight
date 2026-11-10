@@ -1,0 +1,54 @@
+{
+  "name": "branchlight",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "A local Git desktop app with commit history, diffs, branch browsing, and worktrees",
+  "main": "desktop/main.mjs",
+  "author": "sdesrosierstheroux",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sdesrosierstheroux/branchlight.git"
+  },
+  "scripts": {
+    "start": "node server.mjs --open",
+    "desktop": "electron .",
+    "test": "node --test test/*.test.mjs",
+    "test:desktop": "electron --disable-gpu test/worktree-selection.electron.mjs && node test/desktop-startup.mjs",
+    "test:package": "node scripts/verify-package.cjs",
+    "build:win": "electron-builder --win portable --x64",
+    "release:check": "node scripts/check-release.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "build": {
+    "appId": "local.branchlight.git",
+    "productName": "Branchlight",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "desktop/**/*",
+      "public/**/*",
+      "*.mjs",
+      "package.json",
+      "!test/**",
+      "!scripts/**"
+    ],
+    "win": {
+      "target": "portable",
+      "signExecutable": false,
+      "icon": "desktop/branchlight.ico"
+    },
+    "portable": {
+      "artifactName": "Branchlight.exe",
+      "useZip": true
+    }
+  },
+  "devDependencies": {
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3"
+  }
+}
