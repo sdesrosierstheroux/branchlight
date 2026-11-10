@@ -202,7 +202,8 @@ test('a parent folder replaced by a junction after preview cannot delete outside
     await unlink(path.join(folder, 'file.txt'));
     await rmdir(folder);
     await symlink(outside, folder, process.platform === 'win32' ? 'junction' : 'dir');
-    await assert.rejects(discardChanges(plan), /junctions/);
+    // Git reports removed children beneath a symlink on Unix before path validation; both failures must preserve the outside file.
+    await assert.rejects(discardChanges(plan), /junctions|These files no longer have changes/);
     assert.equal(await read(outside), 'outside content');
 });
 
