@@ -737,6 +737,14 @@ function codeCell(text, className = 'code') {
 
 function diffTable(rows, split) {
     const table = element('table', `code-table${split ? ' split' : ''}`);
+    if (split) {
+        // A spanning hunk or metadata row cannot define fixed-layout column widths.
+        const columns = element('colgroup');
+        for (const className of ['gutter-column', 'code-column', 'gutter-column', 'code-column']) {
+            columns.append(element('col', className));
+        }
+        table.append(columns);
+    }
     const body = element('tbody');
     table.append(body);
     function wide(row) {

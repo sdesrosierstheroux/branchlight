@@ -1,13 +1,7 @@
-# Branchlight 0.1.0
+# Branchlight 0.1.1
 
-First standalone release of the Git app extracted from DevDeck.
+Fix the split diff layout: narrow line-number gutters and equally sized code panes now stay correct when a hunk or metadata header appears first. Code uses the available width instead of being squeezed into a quarter of the preview.
 
-- Commit graph, branch and tag browsing, search, and branch soloing.
-- Staged/unstaged changes, diffs, text file browsing, and worktree navigation.
-- Branch checkout, fast-forward-only Pull, confirmed discard, and worktree/local branch deletion.
-- Independent profile and Windows application identity, portable x64 executable, full source, and tests.
-- Repository discovery uses ~/git by default and can be configured with BRANCHLIGHT_REPOSITORIES.
+Verified in Changes and commit diffs, including long lines, window resizing, and untracked files. The diff-layout regression check is included in the Windows desktop checks, and package verification now checks the bundled stylesheet as well.
 
-Requires Git for Windows on PATH. The portable download is unsigned. Download Branchlight.exe; Node.js does not need to be installed. SHA256SUMS.txt contains its checksum.
-
-There is no staging, commit, push, stash, rebase, or conflict-resolution UI. Updates are downloaded manually from Releases.
+Requires Git for Windows on PATH. Download Branchlight.exe; a separate Node.js installation is not required. The portable app is unsigned, and SHA256SUMS.txt contains its checksum.

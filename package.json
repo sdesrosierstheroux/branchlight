@@ -1,6 +1,6 @@
 {
   "name": "branchlight",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
@@ -15,10 +15,11 @@
     "start": "node server.mjs --open",
     "desktop": "electron .",
     "test": "node --test test/*.test.mjs",
-    "test:desktop": "electron --disable-gpu test/worktree-selection.electron.mjs && node test/desktop-startup.mjs",
+    "test:desktop": "electron --disable-gpu test/worktree-selection.electron.mjs && node test/desktop-startup.mjs && npm run test:diff-layout",
     "test:package": "node scripts/verify-package.cjs",
     "build:win": "electron-builder --win portable --x64",
-    "release:check": "node scripts/check-release.mjs"
+    "release:check": "node scripts/check-release.mjs",
+    "test:diff-layout": "electron --disable-gpu test/diff-layout.electron.mjs"
   },
   "engines": {
     "node": ">=24"
