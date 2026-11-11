@@ -210,3 +210,6 @@ main { grid-column: 3; grid-row: 2; min-width: 0; min-height: 0; background: var
 .standalone-version { margin: 0 4px; }
 
 #pull-label { font: inherit; }
+
+.branch-sync { flex-shrink: 0; display: inline-flex; align-items: center; padding: 2px 6px; border: 1px solid #3c485a; border-radius: 3px; color: #b7c5d9; font-size: 11px; line-height: 18px; white-space: nowrap; }
+.branch-sync.is-behind { color: #f0c57e; border-color: #66563e; background: #332c23; }

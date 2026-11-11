@@ -221,3 +221,40 @@ test('HTTP branch actions require authentication, POST, current root and current
     assert.equal(response.status, 400);
     assert.match((await response.json()).error, /tracking upstream/);
 });
+
+
+test('status compares the current upstream without fetching or mistaking missing tracking data for zero', async t => {
+    const { root, peer } = await remoteFixture(t);
+    const initial = await status(root);
+    assert.equal(initial.trackingAvailable, true);
+    assert.equal(initial.behind, 0);
+    assert.equal(initial.ahead, 0);
+    for (let i = 1; i <= 3; i++) {
+        await writeFile(path.join(peer, 'remote.txt'), 'Remote change ' + i + '\n');
+        await commit(peer, 'Remote change ' + i);
+    }
+    await git(peer, ['push', 'origin', 'main']);
+    assert.equal((await status(root)).behind, 0, 'Status uses the last fetched refs and never fetches on its own');
+    await git(root, ['fetch', 'origin']);
+    assert.equal((await status(root)).behind, 3);
+    await writeFile(path.join(root, 'local.txt'), 'Local commit\n');
+    await commit(root, 'Local commit');
+    await writeFile(path.join(root, 'file.txt'), 'Uncommitted edit\n');
+    const diverged = await status(root);
+    assert.equal(diverged.trackingAvailable, true);
+    assert.equal(diverged.behind, 3);
+    assert.equal(diverged.ahead, 1);
+    assert.equal(await readFile(path.join(root, 'file.txt'), 'utf8'), 'Uncommitted edit\n');
+    await git(root, ['update-ref', '-d', 'refs/remotes/origin/main']);
+    const missing = await status(root);
+    assert.ok(missing.refs.find(ref => ref.current).upstream);
+    assert.equal(missing.trackingAvailable, false);
+    await git(root, ['branch', '--unset-upstream']);
+    assert.equal((await status(root)).trackingAvailable, false);
+    await git(root, ['switch', '--detach', 'HEAD']);
+    const detached = await status(root);
+    assert.equal(detached.trackingAvailable, false);
+    assert.equal(detached.refs.some(ref => ref.current), false);
+    assert.equal(detached.head, diverged.head);
+    assert.equal(await readFile(path.join(root, 'file.txt'), 'utf8'), 'Uncommitted edit\n');
+});

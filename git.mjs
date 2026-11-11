@@ -64,13 +64,18 @@ export async function status(root) {
     const current = refs.find(ref => ref.current);
     let ahead = 0;
     let behind = 0;
+    let trackingAvailable = false;
     if (current?.upstream && headOutput) {
-        const counts = await git(root, ['rev-list', '--left-right', '--count', 'HEAD...@{upstream}', '--']).catch(() => '0\t0');
-        [ahead, behind] = counts.trim().split(/\s+/).map(Number);
+        const counts = await git(root, ['rev-list', '--left-right', '--count', 'HEAD...@{upstream}', '--']).catch(() => null);
+        const values = counts?.trim().split(/\s+/).map(Number);
+        if (values?.length === 2 && values.every(value => Number.isSafeInteger(value) && value >= 0)) {
+            [ahead, behind] = values;
+            trackingAvailable = true;
+        }
     }
     return {
         root, name: path.basename(root), branch: branchOutput.trim() || (headOutput ? 'Detached HEAD' : 'No commits yet'),
-        head: headOutput.trim(), files: parseStatus(output), refs, ahead, behind, worktrees: worktreeList,
+        head: headOutput.trim(), files: parseStatus(output), refs, ahead, behind, trackingAvailable, worktrees: worktreeList,
     };
 }
 

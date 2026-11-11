@@ -20,6 +20,7 @@ Your repositories stay on your computer. No app account, hosted server, or GitHu
 - Commit graph with local and remote branch folders, tags, search, and branch soloing.
 - Working directory view with staged and unstaged files, unified and side-by-side diffs, and text previews.
 - Local and tracking branch checkout, plus **fast-forward-only Pull** from the current branch's upstream.
+- A visible **commits behind / ahead** count beside Pull for the current checkout. Hover for its tracking branch and details. Counts use the last fetched remote state and refresh after Pull or a fetch in another Git tool; viewing or soloing another branch does not change the comparison. Branches without an upstream or with a missing tracking ref show that state instead of a misleading zero.
 - Linked worktree browsing, with branch selection and navigation preserved between views.
 - Confirmed file discard and worktree/local branch deletion, with checks for changed files, active Git operations, locks, and commits that have not been merged.
 - Resizable panels, keyboard shortcuts, and a visible running version from package metadata.

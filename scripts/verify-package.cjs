@@ -12,7 +12,7 @@ assert.equal(packaged.name, 'branchlight');
 const files = asar.listPackage(archive).map(file => file.replaceAll('\\', '/').replace(/^\//, ''));
 assert.ok(!files.some(file => /^(dispatch|worktree-manager|test|scripts|node_modules)(\/|$)/.test(file)), 'Only Git app runtime files belong in the package');
 assert.ok(!files.some(file => /(^|\/)\.env($|\.)/.test(file)), 'No environment files belong in the package');
-for (const file of ['desktop/main.mjs', 'desktop/preload.cjs', 'desktop/windows-identity.mjs', 'public/index.html', 'public/app.js', 'public/styles.css', 'repositories.mjs', 'server.mjs', 'git.mjs']) {
+for (const file of ['desktop/main.mjs', 'desktop/preload.cjs', 'desktop/windows-identity.mjs', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/desktop.css', 'repositories.mjs', 'server.mjs', 'git.mjs']) {
     assert.deepEqual(asar.extractFile(archive, file), fs.readFileSync(path.join(root, file)), 'Bundled file differs: ' + file);
 }
 assert.ok(fs.existsSync(path.join(root, 'dist', 'win-unpacked', 'LICENSE.electron.txt')));

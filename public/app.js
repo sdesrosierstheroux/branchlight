@@ -87,6 +87,31 @@ function setView(view) {
     }
 }
 
+function renderSyncStatus() {
+    const data = state.status;
+    const current = data?.refs.find(ref => ref.current);
+    const indicator = $('toolbar-sync');
+    indicator.hidden = !data?.root || !current;
+    if (indicator.hidden) return;
+    let label;
+    let description;
+    if (!current.upstream) {
+        label = 'No upstream';
+        description = 'This branch has no tracking upstream. Configure one in Git to compare commits.';
+    } else if (!data.trackingAvailable) {
+        label = 'Upstream unavailable';
+        description = 'Cannot compare with ' + current.upstream + '. Fetch in your Git tool and refresh to update the remote tracking branch.';
+    } else {
+        label = data.behind + ' behind' + (data.ahead ? ' · ' + data.ahead + ' ahead' : '');
+        const commits = count => count + (count === 1 ? ' commit' : ' commits');
+        description = commits(data.behind) + ' behind and ' + commits(data.ahead) + ' ahead of ' + current.upstream + '. Based on the last fetched remote state; Pull or fetch in your Git tool to update it.';
+    }
+    if (indicator.textContent !== label) indicator.textContent = label;
+    indicator.title = description;
+    indicator.setAttribute('aria-label', description);
+    indicator.classList.toggle('is-behind', Boolean(data.trackingAvailable && data.behind));
+}
+
 function renderStatus(data) {
     state.status = data;
     $('repo-name').textContent = data.name;
@@ -103,6 +128,7 @@ function renderStatus(data) {
     $('current-branch').textContent = data.branch;
     $('current-branch').title = data.branch;
     $('sync-counts').textContent = data.ahead || data.behind ? `↑${data.ahead} ↓${data.behind}` : '';
+    renderSyncStatus();
     $('change-count').textContent = data.files.length;
     $('changes-total').textContent = data.files.length;
     $('branch-count').textContent = data.refs.filter(ref => ref.name.startsWith('refs/heads/')).length;
